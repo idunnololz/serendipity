@@ -13,5 +13,6 @@
     <string name="i_want">I want</string>
     <string name="now">Now</string>
     <string name="thinking">thinking...</string>
+    <string name="no_open_restaurants">There are no good open restaurants near you right now.</string>
 
 </resources>

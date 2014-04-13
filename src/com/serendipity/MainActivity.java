@@ -2,6 +2,7 @@ package com.serendipity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.concurrent.Semaphore;
 
 import org.json.JSONArray;
@@ -42,6 +43,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
@@ -64,7 +66,7 @@ public class MainActivity extends Activity {
 
 	private Location lastLocation;
 
-	private View bg;
+	private ImageView bg;
 	private ViewGroup queryView;
 	private ImageButton btnSearch;
 	private EditText txtQuery;
@@ -74,6 +76,7 @@ public class MainActivity extends Activity {
 
 	private static final int SCALE_DURATION = 60000;
 	private static final int ROTATE_DURATION = 1300;
+	private static final int FADE_DURATION = 500;
 
 	private Object lock = new Object();
 	
@@ -89,7 +92,7 @@ public class MainActivity extends Activity {
 
 		setContentView(R.layout.activity_main);
 
-		bg = findViewById(R.id.bg);
+		bg = (ImageView) findViewById(R.id.bg);
 		queryView = (ViewGroup) findViewById(R.id.queryView);
 		btnSearch = (ImageButton) findViewById(R.id.search);
 		txtQuery = (EditText) findViewById(R.id.query);
@@ -125,9 +128,16 @@ public class MainActivity extends Activity {
 		registerLocationUpdates();
 	}
 
-	float curX = 1f, curY = 1f;
-
 	private void doQuery() {
+		String query = txtQuery.getText().toString();
+		if (query == null || query.length() == 0) {
+			query = Utils.getRandomQuery();
+		}
+		
+		if (query.toLowerCase(Locale.US).equals("doge")) {
+			bg.setImageResource(R.drawable.doge);
+		}
+		
 		Animation fadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out_zoom_in);
 		fadeOut.setFillAfter(true);
 		fadeOut.setAnimationListener(new AnimationListener() {
@@ -138,16 +148,10 @@ public class MainActivity extends Activity {
 			}
 
 			@Override
-			public void onAnimationRepeat(Animation animation) {
-				// TODO Auto-generated method stub
-
-			}
+			public void onAnimationRepeat(Animation animation) {}
 
 			@Override
-			public void onAnimationStart(Animation animation) {
-				// TODO Auto-generated method stub
-
-			}
+			public void onAnimationStart(Animation animation) {}
 
 		});
 		fadeOut.setFillBefore(false);
@@ -155,17 +159,13 @@ public class MainActivity extends Activity {
 		fadeOut.setFillEnabled(false);
 		queryView.startAnimation(fadeOut);
 
-		ScaleAnimation scaleAni = new ScaleAnimation(1, 6f, 1, 6f, ScaleAnimation.RELATIVE_TO_SELF, 0.5f, ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
+		ScaleAnimation scaleAni = new ScaleAnimation(1, 4f, 1, 4f, ScaleAnimation.RELATIVE_TO_SELF, 0.5f, ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
 		scaleAni.setDuration(SCALE_DURATION);
 		scaleAni.setFillBefore(false);
 		scaleAni.setFillAfter(false);
 		scaleAni.setFillEnabled(false);
+		scaleAni.setInterpolator(new LinearInterpolator());
 		bg.startAnimation(scaleAni);
-
-		String query = txtQuery.getText().toString();
-		if (query == null || query.length() == 0) {
-			query = Utils.getRandomQuery();
-		}
 
 		Log.d(TAG, "Sending query for " + query);
 		if (stateMgr.getLastLocation() != null) {
@@ -186,8 +186,7 @@ public class MainActivity extends Activity {
 		spinnerContainer.setVisibility(View.VISIBLE);
 		
 		AlphaAnimation alphaAni = new AlphaAnimation(0f, 1f);
-		alphaAni.setDuration(ROTATE_DURATION);
-		
+		alphaAni.setDuration(FADE_DURATION);
 		
 		spinnerContainer.startAnimation(alphaAni);
 
@@ -380,14 +379,13 @@ public class MainActivity extends Activity {
 		@Override
 		protected void onPostExecute(JSONObject result) {
 			Log.d(TAG, "Winner!");
+			queryTask = null;
 			
 			if (result == null) {
 				fadeViewsBackIn();
-				Toast.makeText(MainActivity.this, "Sorry. We couldn't find a good open restaurant near you...", Toast.LENGTH_LONG).show();
+				Toast.makeText(MainActivity.this, R.string.no_open_restaurants, Toast.LENGTH_LONG).show();
 				return;
 			}
-			
-			queryTask = null;
 
 			try {
 				JSONObject r = result;
@@ -418,7 +416,9 @@ public class MainActivity extends Activity {
 				v.findViewById(R.id.viewBg).setLayoutParams(lp);
 				
 				TextView title = (TextView) v.findViewById(R.id.txtTitle);
+				TextView subtext = (TextView) v.findViewById(R.id.txtSubtext);
 				title.setText(result.getString("name"));
+				subtext.setText("on Yelp");
 				
 				RatingBar rb = (RatingBar) v.findViewById(R.id.ratingBar);
 				rb.setRating((float) (result.getDouble("rating") * 5));
@@ -440,14 +440,6 @@ public class MainActivity extends Activity {
 		}
 
 	};
-	
-	@Override
-	public void onStop() {
-		super.onStop();
-		if (queryTask != null && !queryTask.isCancelled()) {
-			queryTask.cancel(true);
-		}
-	}
 	
 	public void fadeViewsBackIn() {
 		Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in_zoom_out);
@@ -476,7 +468,38 @@ public class MainActivity extends Activity {
 		queryView.setVisibility(View.VISIBLE);
 		queryView.startAnimation(fadeIn);
 		
+		AlphaAnimation alphaAni = new AlphaAnimation(1f, 0f);
+		alphaAni.setDuration(FADE_DURATION);
+		alphaAni.setAnimationListener(new AnimationListener() {
+
+			@Override
+			public void onAnimationEnd(Animation arg0) {
+				spinnerContainer.setVisibility(View.INVISIBLE);
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onAnimationStart(Animation arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		spinnerContainer.startAnimation(alphaAni);
+		
+		long elapsed = SystemClock.uptimeMillis() - bg.getAnimation().getStartTime();
+		float amount = 3f * Math.min(1f, (elapsed / (float)SCALE_DURATION)) + 1f;
+		ScaleAnimation scaleAni = new ScaleAnimation(amount, 1f, amount, 1f, ScaleAnimation.RELATIVE_TO_SELF, 0.5f, ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
+		scaleAni.setDuration(500);
+		scaleAni.setFillAfter(true);
+		
 		bg.clearAnimation();
+		bg.startAnimation(scaleAni);
 		
 		findViewById(R.id.spinnerContainer).setVisibility(View.INVISIBLE);
 	}

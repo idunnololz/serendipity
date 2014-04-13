@@ -3,10 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <View
+    <ImageView
         android:id="@+id/bg"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true" />
 
     <RelativeLayout
         android:id="@+id/queryView"
@@ -83,23 +84,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="invisible">
+        android:padding="20dp"
+        android:visibility="invisible" >
 
         <TextView
-            android:layout_centerInParent="true"
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-thin"
-                android:textColor="#E6FFFFFF"
+            android:layout_centerInParent="true"
+            android:fontFamily="sans-serif-thin"
             android:text="@string/thinking"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#E6FFFFFF" />
 
         <ImageView
-            android:layout_centerInParent="true"
             android:id="@+id/spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:src="@drawable/spinner" />
     </RelativeLayout>
 

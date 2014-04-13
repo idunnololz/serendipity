@@ -15,18 +15,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="20dp"
+            android:layout_marginTop="20dp"
             android:ellipsize="end"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <RatingBar
             android:id="@+id/ratingBar"
+            android:layout_marginTop="-4dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:scaleX="0.5"
             android:scaleY="0.5" />
+        
+        <TextView
+            android:id="@+id/txtSubtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="-10dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
     </LinearLayout>
 
     <View
