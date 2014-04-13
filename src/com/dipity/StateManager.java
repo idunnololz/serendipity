@@ -1,4 +1,4 @@
-package com.serendipity;
+package com.dipity;
 
 import java.util.Random;
 import java.util.concurrent.Executor;
@@ -12,8 +12,8 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.util.Log;
 
-import com.serendipity.utils.ApiManager;
-import com.serendipity.utils.LogUtils;
+import com.dipity.utils.ApiManager;
+import com.dipity.utils.LogUtils;
 
 public class StateManager {
 	private static final String TAG = StateManager.class.getSimpleName();

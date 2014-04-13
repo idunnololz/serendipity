@@ -1,4 +1,4 @@
-package com.serendipity.utils;
+package com.dipity.utils;
 
 import java.io.IOException;
 import java.util.ArrayList;

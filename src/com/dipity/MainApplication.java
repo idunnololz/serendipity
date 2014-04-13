@@ -1,4 +1,4 @@
-package com.serendipity;
+package com.dipity;
 
 import android.app.Application;
 

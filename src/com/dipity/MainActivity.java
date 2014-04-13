@@ -1,4 +1,4 @@
-package com.serendipity;
+package com.dipity;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
@@ -28,7 +28,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		if (frag != null && !frag.onBackPressed()) {
+		if (frag == null || !frag.onBackPressed()) {
 			super.onBackPressed();
 		}
 	}

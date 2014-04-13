@@ -1,4 +1,4 @@
-package com.serendipity.utils;
+package com.dipity.utils;
 
 import java.util.ArrayList;
 import java.util.Calendar;

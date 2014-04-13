@@ -1,4 +1,4 @@
-package com.serendipity.utils;
+package com.dipity.utils;
 
 import android.location.Location;
 

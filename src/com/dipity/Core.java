@@ -1,4 +1,4 @@
-package com.serendipity;
+package com.dipity;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -6,7 +6,7 @@ import java.util.Random;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.serendipity.utils.LogUtils;
+import com.dipity.utils.LogUtils;
 
 import android.util.Log;
 

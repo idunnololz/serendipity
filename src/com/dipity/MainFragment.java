@@ -1,4 +1,4 @@
-package com.serendipity;
+package com.dipity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.jsoup.nodes.Document;
 
 import android.app.Fragment;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -47,10 +48,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.serendipity.utils.ApiManager;
-import com.serendipity.utils.LogUtils;
-import com.serendipity.utils.Utils;
-import com.serendipity.utils.YelpUtils;
+import com.dipity.utils.ApiManager;
+import com.dipity.utils.LogUtils;
+import com.dipity.utils.Utils;
+import com.dipity.utils.YelpUtils;
 
 public class MainFragment extends Fragment{
 	private static final String TAG = MainFragment.class.getSimpleName();
@@ -147,7 +148,7 @@ public class MainFragment extends Fragment{
 		});
 
 		if (queryRunning()) {
-			doQueryAnimations();
+			switchToQueryUi(false);
 		}
 
 		if (dogeMode) {
@@ -180,10 +181,29 @@ public class MainFragment extends Fragment{
 			queryTask.execute(stateMgr.getLastLocation(), query);
 		}
 
-		doQueryAnimations();
+		switchToQueryUi();
 	}
 
-	private void doQueryAnimations() {
+	private void switchToQueryUi() {
+		switchToQueryUi(true);
+	}
+
+	private void switchToQueryUi(boolean animate) {
+		if (!animate) {
+			btnSearch.setClickable(true);
+			queryView.setVisibility(View.INVISIBLE);
+			spinnerContainer.setVisibility(View.VISIBLE);
+
+			RotateAnimation spinnerAni = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+			spinnerAni.setDuration(ROTATE_DURATION);
+			spinnerAni.setRepeatMode(Animation.RESTART);
+			spinnerAni.setRepeatCount(Animation.INFINITE);
+			spinnerAni.setInterpolator(new LinearInterpolator());
+			rootView.findViewById(R.id.spinner).startAnimation(spinnerAni);
+
+			return;
+		}
+
 		Animation fadeOut = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out_zoom_in);
 		fadeOut.setFillAfter(true);
 		fadeOut.setAnimationListener(new AnimationListener() {
@@ -334,7 +354,7 @@ public class MainFragment extends Fragment{
 	@Override
 	public void onResume() {
 		LogUtils.d(TAG, "onResume()");
-		
+
 		super.onResume();
 
 		if (shouldResetViews) {
@@ -357,7 +377,7 @@ public class MainFragment extends Fragment{
 	@Override
 	public void onPause() {
 		LogUtils.d(TAG, "onPause()");
-		
+
 		super.onPause();
 
 		locationMgr.removeUpdates(locationListener);
@@ -515,12 +535,25 @@ public class MainFragment extends Fragment{
 				LogUtils.d(TAG, "Distance: " + r.getString("distance"));
 				LogUtils.d(TAG, "Rating: " + r.getString("rating"));
 
-				Uri uri = new Uri.Builder()
-				.scheme("geo")
-				.encodedOpaquePart("0,0?q=" + result.getString("name") + "," + result.getJSONObject("location").getString("display_address"))
-				.build();
-				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-				getActivity().startActivity(intent);
+				Uri uri;
+
+				try {
+					uri = new Uri.Builder()
+					.scheme("http://maps.google.com/")
+					.encodedOpaquePart("maps?daddr=" + result.getString("name") + "+" + result.getJSONObject("location").getString("address"))
+					.build();
+
+					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + result.getString("name") + "," + result.getJSONObject("location").getString("address")));
+					intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+					getActivity().startActivity(intent);
+				} catch(ActivityNotFoundException e) {
+					uri = new Uri.Builder()
+					.scheme("geo")
+					.encodedOpaquePart("0,0?q=" + result.getString("name") + "," + result.getJSONObject("location").getString("display_address"))
+					.build();
+					Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+					getActivity().startActivity(intent);
+				}
 
 				shouldResetViews = true;
 
@@ -611,7 +644,7 @@ public class MainFragment extends Fragment{
 	}
 
 	public boolean onBackPressed() {
-		if (queryTask != null && !queryTask.isCancelled()) {
+		if (queryRunning()) {
 			queryTask.cancel(true);
 
 			fadeViewsBackIn();
