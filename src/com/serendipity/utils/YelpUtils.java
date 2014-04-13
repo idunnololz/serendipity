@@ -24,7 +24,7 @@ public class YelpUtils {
 	public static double getMoney(Document doc) {
 		Elements elements = doc.select("span#price_tip");
 		if (elements.size() == 0) {
-			Log.e(TAG, "FATAL ERROR: Empty selector when attempting to scrape " + doc.baseUri());
+			LogUtils.e(TAG, "FATAL ERROR: Empty selector when attempting to scrape " + doc.baseUri());
 		}
 		return elements.get(0).text().length()/ 4.0;
 	}
@@ -32,7 +32,7 @@ public class YelpUtils {
 	public static ArrayList<Double> getOpenTime(Document doc) {
 		Elements elements = doc.select(".biz-details .biz-info .biz-hours");
 		if (elements.size() == 0) {
-			Log.e(TAG, "FATAL ERROR: Empty selector when attempting to scrape " + doc.baseUri());
+			LogUtils.e(TAG, "FATAL ERROR: Empty selector when attempting to scrape " + doc.baseUri());
 			return new ArrayList<Double>();
 		}
 		return getOpenTime(elements.get(0).toString());
@@ -47,7 +47,7 @@ public class YelpUtils {
 				i = getFirstTime(times, i, t);
 				
 				if (i == -1) {
-					Log.e(TAG, "ERROR!");
+					LogUtils.e(TAG, "ERROR!");
 					break;
 				}
 			}

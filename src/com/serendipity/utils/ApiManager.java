@@ -7,6 +7,8 @@ import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
 
+import android.graphics.Typeface;
+
 public class ApiManager {
 	private static final String API_URL = "http://api.yelp.com/v2/search";
 

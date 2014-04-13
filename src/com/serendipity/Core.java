@@ -6,6 +6,8 @@ import java.util.Random;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.serendipity.utils.LogUtils;
+
 import android.util.Log;
 
 /**
@@ -107,7 +109,7 @@ public class Core {
 			double score = calculateHeuristic(obj);
 			double distance = obj.getDouble("distance");
 			
-			Log.d(TAG, "name: " + obj.getString("name") + " score: " + score + " dist: " + ((1 / ((distance / MILE_IN_METER) + 4)) * WEIGHT_DISTANCE));
+			LogUtils.d(TAG, "name: " + obj.getString("name") + " score: " + score + " dist: " + ((1 / ((distance / MILE_IN_METER) + 4)) * WEIGHT_DISTANCE));
 			
 			if (score > bestScore) {
 				theBest = obj;

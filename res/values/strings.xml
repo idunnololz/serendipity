@@ -14,5 +14,7 @@
     <string name="now">Now</string>
     <string name="thinking">thinking...</string>
     <string name="no_open_restaurants">There are no good open restaurants near you right now.</string>
+    
+    <string name="doge_toast">You\'ve got it!</string>
 
 </resources>
