@@ -31,7 +31,7 @@ public class ApiManager {
 	 * @return JSON string response
 	 */
 	public String search(String term, double latitude, double longitude, int limit) {
-		OAuthRequest request = new OAuthRequest(Verb.GET, "http://api.yelp.com/v2/search");
+		OAuthRequest request = new OAuthRequest(Verb.GET, API_URL);
 		request.addQuerystringParameter("term", term);
 		request.addQuerystringParameter("ll", latitude + "," + longitude);
 		

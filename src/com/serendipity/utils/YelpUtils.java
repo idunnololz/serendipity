@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import android.util.Log;
@@ -41,7 +40,6 @@ public class YelpUtils {
 	
 	public static ArrayList<Double> getOpenTime(String times) {
 		ArrayList<Double> t = new ArrayList<Double>();
-		int n = 0;
 		// <li class="biz-hours"> Hours today: 12 pm - 9:30 pm <span class="status closed"> Closed</span> </li>
 		for (int i = 0; i < times.length(); i++) {
 			char c = times.charAt(i);
