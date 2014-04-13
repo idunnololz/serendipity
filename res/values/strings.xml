@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <!-- Keys -->
+    <string name="key_yelp_consumer">H8LnKk0YMILop-RkAJ_-0w</string>
+    <string name="key_yelp_consumer_secret">6X2fZQam2_aggcubI-1wqxU0KZA</string>
+    <string name="key_yelp_token">e0yVVCx127VGomwRgzz7JEHAgs9ZxeWF</string>
+    <string name="key_yelp_token_secret">SmBdXQKBs52csF9XzcICkBRMcwc</string>
+
+    <string name="app_name">Serendipity</string>
+    <string name="action_settings">Settings</string>
+    <string name="search">Search</string>
+    <string name="i_want">I want</string>
+    <string name="now">Now</string>
+    <string name="thinking">thinking...</string>
+
+</resources>
